@@ -1,0 +1,14 @@
+type: edu
+files:
+  - name: src/budget/Main.java
+    visible: true
+    learner_created: false
+  - name: test/BudgetManagerTest.java
+    visible: true
+    learner_created: false
+feedback_link: https://hyperskill.org/projects/76/stages/421/implement#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Fri, 01 May 2026 20:14:02 UTC"
+record: -1

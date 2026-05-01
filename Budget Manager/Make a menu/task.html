@@ -1,0 +1,69 @@
+<div class="step-text">
+<p></p><h5 id="description">Description</h5><p>Let's make your application more convenient. Only counting the expenses is a little bit sad, right?</p><p>To make your application flexible and functional, add a menu that consists of 4 items.</p><ol><li><p><strong>Add income</strong> — We must track both our expenses and our income. When this item is selected, the program should ask to enter the amount of income.</p></li><li><p><strong>Add purchase</strong> — This item should add a purchase to the list. You also need to subtract the price of the purchase from the income.</p></li><li><p><strong>Show the list of purchases</strong> — This menu item should display a list of all expenses in the order they were made.</p></li><li><p><strong>Balance</strong> — Show the balance which is equal to total income subtracted by total expenses during purchase.</p></li><li><p><strong>Exit </strong>— Print <code class="java">Bye!</code> and exit the program. Make this item under number <strong>0</strong>, not number 5.</p></li></ol><p>Notice, that the amount of remaining money cannot be negative. In such cases, make the balance equal to $0.</p><p>When displaying the price or the total amount, print 2 numbers after the point. For example: <code class="java">$14.20</code>. Upcoming stages will also follow this rule.</p><div class="alert alert-primary"><details><summary>Warning with regards to use of <code class="java">.nextInt()</code></summary><div><p>Keep in mind that if you're using <code class="java">.nextInt()</code> to scan integer input for your menu actions, then you must also handle the corresponding white space become receiving the next string input. For example, after selecting menu option 2, a user will press enter and then type the name of the purchase. If you had used <code class="java">.nextInt()</code> to handle the menu selection, the <strong>enter </strong>button pressed by the user should also be read before the user can input the purchase name. This means you need to use an addition <code class="java">.next()</code> after you use <code class="java">.nextInt()</code>.</p></div></details></div><h5 id="example">Example</h5><p>The greater-than symbol followed by a space (<code class="java">&gt; </code>) represents the user input. Notice that it's not part of the input.</p><pre><code class="language-no-highlight">Choose your action:
+1) Add income
+2) Add purchase
+3) Show list of purchases
+4) Balance
+0) Exit
+&gt; 1
+
+Enter income:
+&gt; 1000
+Income was added!
+
+Choose your action:
+1) Add income
+2) Add purchase
+3) Show list of purchases
+4) Balance
+0) Exit
+&gt; 4
+
+Balance: $1000.00
+
+Choose your action:
+1) Add income
+2) Add purchase
+3) Show list of purchases
+4) Balance
+0) Exit
+&gt; 3
+
+The purchase list is empty
+
+Choose your action:
+1) Add income
+2) Add purchase
+3) Show list of purchases
+4) Balance
+0) Exit
+&gt; 2
+
+Enter purchase name:
+&gt;Red Fuji Apple
+Enter its price:
+&gt; 5.99
+Purchase was added!
+
+Choose your action:
+1) Add income
+2) Add purchase
+3) Show list of purchases
+4) Balance
+0) Exit
+&gt; 3
+
+Red Fuji Apple $5.99
+Total sum: $5.99
+
+Choose your action:
+1) Add income
+2) Add purchase
+3) Show list of purchases
+4) Balance
+0) Exit
+&gt; 0
+
+Bye!
+</code></pre>
+</div>
