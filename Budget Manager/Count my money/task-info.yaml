@@ -4,6 +4,7 @@ files:
     visible: true
     learner_created: false
   - name: test/BudgetManagerTest.java
+    visible: true
     learner_created: false
 feedback_link: https://hyperskill.org/projects/76/stages/421/implement#comment
 status: Solved

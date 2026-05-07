@@ -1,4 +1,5 @@
 package budget;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -44,6 +45,7 @@ class Budget {
     double totalIncome = 0;
     double totalBalance = 0;
     String currency;
+    public String pathToFile = "purchases.txt";
 
     ArrayList<Purchase> purchases = new ArrayList<>();
     ArrayList<Income> incomes = new ArrayList<>();
@@ -56,6 +58,7 @@ class Budget {
 
     public void addPurchase(Purchase purchase) {
         purchases.add(purchase);
+
         if  (purchase.amount > totalBalance) {
             purchase.amount =  totalBalance;
         }
@@ -67,6 +70,10 @@ class Budget {
         this.totalIncome += income.amount;
         incomes.add(income);
         this.totalBalance += income.amount;
+    }
+
+    public void setBalance(double balance) {
+        this.totalBalance = balance;
     }
 
     public double totalBalance() {
@@ -190,11 +197,9 @@ class BudgetManager {
                             sum += purchase.amount;
                         }
                     }
-                }
-                if (sum == 0) {
-                    System.out.println("The purchase list is empty!");
-                } else {
                     System.out.println("Total sum: " + budget.currency + String.format("%.2f", sum));
+                } else {
+                    System.out.println("The purchase list is empty!");
                 }
 
             } else if (input == 6) {
@@ -218,6 +223,51 @@ class BudgetManager {
         System.out.println("Balance: " + budget.currency + String.format("%.2f", budget.totalBalance()));
     }
 
+    public static void savePurchasesToFile(Budget budget, String pathToFile) {
+
+        StringBuilder sb = new StringBuilder();
+        String splitter = "|";
+
+        sb.append("Balance ").append(String.format("%.2f", budget.totalIncome)).append("\n");
+
+        for (Purchase purchase : budget.purchases) {
+            sb.append(purchase.category).append(splitter).append(purchase.description).append(splitter);
+            sb.append(budget.currency).append(splitter).append(String.format("%.2f", purchase.amount)).append("\n");
+        }
+
+        saveStringsToFile(sb.toString(), pathToFile);
+    }
+
+    public static void loadPurchasesFromFile(Budget budget, String pathToFile) {
+
+        String fileText = loadStringsFromFile(pathToFile);
+
+        try (BufferedReader reader = new BufferedReader(new StringReader(fileText))) {
+            String row;
+            boolean firstRow = true;
+            while ((row = reader.readLine()) != null) {
+                if (firstRow) {
+                    firstRow = false;
+                    String[] arrayFirstRow = row.split(" ");
+                    if (arrayFirstRow.length == 2 && arrayFirstRow[0].equals("Balance")) {
+                        budget.setBalance(Double.parseDouble(arrayFirstRow[1]));
+                    }
+                } else {
+                    String[] arrayOfRow = row.split("\\|");
+                    if (arrayOfRow.length == 4) {
+                        String category = arrayOfRow[0];
+                        String description = arrayOfRow[1];
+                        double amount = Double.parseDouble(arrayOfRow[3]);
+                        budget.addPurchase(new Purchase(category, description, amount));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static Map<String, Double> getPurchaseFromString(String purchaseString, String currency) {
 
         Map<String, Double> result = new HashMap<>();
@@ -236,6 +286,33 @@ class BudgetManager {
         return result;
     }
 
+    public static void saveStringsToFile(String textToSave, String pathToFile) {
+
+        File file = new File(pathToFile);
+
+        try (FileWriter fw = new FileWriter(file)) {
+            fw.write(textToSave + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String loadStringsFromFile(String pathToFile) {
+
+        StringBuilder sb = new StringBuilder();
+        File file = new File(pathToFile);
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNext()) {
+                sb.append(scanner.nextLine()).append("\n");
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("No file found: " + pathToFile);
+        }
+
+        return sb.toString();
+    }
+
     public static void budgetMenu(Budget budget) {
 
         Scanner scanner = new Scanner(System.in);
@@ -246,6 +323,8 @@ class BudgetManager {
         menu.put(2, "Add purchase");
         menu.put(3, "Show list of purchases");
         menu.put(4, "Balance");
+        menu.put(5, "Save");
+        menu.put(6, "Load");
         menu.put(10, "Exit");
 
         System.out.println("Choose your action:");
@@ -282,6 +361,16 @@ class BudgetManager {
                 case 4: //balance
                     printBalance(budget);
                     System.out.println();
+                    break;
+
+                case 5: //save
+                    savePurchasesToFile(budget, budget.pathToFile);
+                    System.out.println("Purchases were saved!\n");
+                    break;
+
+                case 6: //load
+                    loadPurchasesFromFile(budget, budget.pathToFile);
+                    System.out.println("Purchases were loaded!\n");
                     break;
 
                 default:

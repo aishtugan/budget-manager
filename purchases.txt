@@ -1,0 +1,5 @@
+Food|egg|$|158.78
+Clothes|glove|$|120.50
+Entertainment|CD|$|1672.00
+Food|milk 200|$|123.00
+
