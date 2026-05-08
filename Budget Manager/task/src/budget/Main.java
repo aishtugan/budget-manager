@@ -313,6 +313,149 @@ class BudgetManager {
         return sb.toString();
     }
 
+    public static void sortPurchases(Budget budget) {
+        Scanner scanner = new Scanner(System.in);
+
+        Map<Integer, String > sortMenu = new HashMap<>();
+
+        sortMenu.put(1, "Sort all purchases");
+        sortMenu.put(2, "Sort by type");
+        sortMenu.put(3, "Sort certain type");
+        sortMenu.put(4, "Back");
+
+        Map<Integer, String > purchaseTypes = new HashMap<>();
+
+        purchaseTypes.put(1, "Food");
+        purchaseTypes.put(2, "Clothes");
+        purchaseTypes.put(3, "Entertainment");
+        purchaseTypes.put(4, "Other");
+
+        System.out.println("How do you want to sort?");
+
+        for (int key : sortMenu.keySet()) {
+            System.out.println(key + ") " + sortMenu.get(key));
+        }
+
+        while (scanner.hasNextLine()) {
+
+            int userInput = scanner.nextInt();
+            System.out.println();
+
+            switch (userInput) {
+
+                case 1: // Sort all purchases
+
+                    System.out.println("All:");
+
+                    if (!budget.purchases.isEmpty()) {
+                        double sum = 0;
+                        ArrayList<Purchase> sortedPurchases = sortPurchasesByCategory(budget.purchases, "All");
+                        for (Purchase purchase : sortedPurchases) {
+                            System.out.println(purchase.description + " " + budget.currency + String.format("%.2f", purchase.amount));
+                            sum += purchase.amount;
+                        }
+                        System.out.println("Total: " + budget.currency + String.format("%.2f", sum));
+                    } else {
+                        System.out.println("The purchase list is empty!");
+                    }
+                    break;
+
+                case 2: // Sort by type
+
+                    System.out.println("Types:");
+                    ArrayList<Purchase> types = new ArrayList<>();
+                    for (int key : purchaseTypes.keySet()) {
+                        double sum = 0;
+                        for (Purchase purchase : budget.purchases) {
+                            if (purchase.category.equals(purchaseTypes.get(key))) {
+                                sum += purchase.amount;
+                            }
+                        }
+                        types.add(new Purchase(purchaseTypes.get(key), purchaseTypes.get(key), sum));
+                    }
+                    ArrayList<Purchase> sortedTypes = sortPurchasesByCategory(types, "All");
+                    for (Purchase purchase : sortedTypes) {
+                        System.out.println(purchase.description + " - " + budget.currency + String.format("%.2f", purchase.amount));
+                    }
+                    break;
+
+                case 3: //Sort certain type
+                    System.out.println("Choose the type of purchase");
+                    for (int key : purchaseTypes.keySet()) {
+                        System.out.println(key + ") " + purchaseTypes.get(key));
+                    }
+                    int newUserInput = scanner.nextInt();
+                    System.out.println();
+                    if (newUserInput == 1 || newUserInput == 2 || newUserInput == 3 || newUserInput == 4) {
+                        if (!budget.purchases.isEmpty()) {
+                            ArrayList<Purchase> sortedPurchases = sortPurchasesByCategory(budget.purchases, purchaseTypes.get(newUserInput));
+                            if (!sortedPurchases.isEmpty()) {
+                                System.out.println(purchaseTypes.get(newUserInput)+":");
+                                double sum = 0;
+                                for (Purchase purchase : sortedPurchases) {
+                                    System.out.println(purchase.description + " " + budget.currency + String.format("%.2f", purchase.amount));
+                                    sum += purchase.amount;
+                                }
+                                System.out.println("Total sum: " + budget.currency + String.format("%.2f", sum));
+                            } else {
+                                System.out.println("The purchase list is empty!");
+                            }
+
+                        } else {
+                            System.out.println("The purchase list is empty!");
+                        }
+                    } else {
+                        System.out.println("Wrong input!");
+                    }
+                    break;
+
+                case 4: //back
+                    return;
+
+                default:
+                    System.out.println("Wrong input");
+            }
+
+            System.out.println();
+            System.out.println("How do you want to sort?");
+
+            for (int key : sortMenu.keySet()) {
+                System.out.println(key + ") " + sortMenu.get(key));
+            }
+
+        }
+    }
+
+    public static ArrayList<Purchase> sortPurchasesByCategory(ArrayList<Purchase> purchases, String category) {
+
+        ArrayList<Purchase> sortedPurchases = new ArrayList<>();
+
+        for (Purchase purchase : purchases) {
+            if (purchase.category.equals(category) || category.equals("All")) {
+                sortedPurchases.add(purchase);
+            }
+        }
+        int n = sortedPurchases.size();
+
+        for (int i = 0; i < n - 1; i++) {
+            boolean swapped = false;
+
+            for (int j = 0; j < n - i - 1; j++) {
+                if (sortedPurchases.get(j).amount < sortedPurchases.get(j + 1).amount) {
+                    Purchase temp = sortedPurchases.get(j);
+                    sortedPurchases.set(j, sortedPurchases.get(j + 1));
+                    sortedPurchases.set(j + 1, temp);
+                    swapped = true;
+                }
+            }
+
+            if (!swapped) {
+                break;
+            }
+        }
+
+        return sortedPurchases;
+    }
     public static void budgetMenu(Budget budget) {
 
         Scanner scanner = new Scanner(System.in);
@@ -325,6 +468,7 @@ class BudgetManager {
         menu.put(4, "Balance");
         menu.put(5, "Save");
         menu.put(6, "Load");
+        menu.put(7, "Analyze (Sort)");
         menu.put(10, "Exit");
 
         System.out.println("Choose your action:");
@@ -371,6 +515,10 @@ class BudgetManager {
                 case 6: //load
                     loadPurchasesFromFile(budget, budget.pathToFile);
                     System.out.println("Purchases were loaded!\n");
+                    break;
+                case 7: //sort
+                    sortPurchases(budget);
+                    System.out.println();
                     break;
 
                 default:

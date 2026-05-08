@@ -69,7 +69,7 @@ public class BudgetManagerTest extends StageTest<String> {
 
     //Checking menu
     private static CheckResult test2(String reply, String attach) {
-        String[] menuPatterns = {"1", "2", "3", "4", "5", "6", "0"};
+        String[] menuPatterns = {"1", "2", "3", "4", "5", "6", "7", "0"};
         for (String menuPattern : menuPatterns) {
             if (!reply.contains(menuPattern)) {
                 return new CheckResult(false,

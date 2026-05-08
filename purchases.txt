@@ -1,5 +1,10 @@
-Food|egg|$|158.78
-Clothes|glove|$|120.50
-Entertainment|CD|$|1672.00
-Food|milk 200|$|123.00
+Balance 10000.00
+Food|cheese 12.40|$|12.40
+Food|egg|$|40.50
+Food|bread|$|18.40
+Clothes|glove|$|120.00
+Clothes|coat|$|254.13
+Entertainment|CD|$|15.00
+Entertainment|movie|$|90.00
+Entertainment|okko|$|14.00
 
